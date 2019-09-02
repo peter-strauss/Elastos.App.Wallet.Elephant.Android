@@ -66,6 +66,7 @@ import com.breadwallet.presenter.interfaces.BROnSignalCompletion;
 import com.breadwallet.tools.manager.BRSharedPrefs;
 import com.breadwallet.tools.security.BRKeyStore;
 import com.breadwallet.tools.security.PostAuth;
+import com.breadwallet.tools.sqlite.BRSQLiteHelper;
 import com.breadwallet.tools.util.BRConstants;
 import com.breadwallet.tools.util.StringUtil;
 import com.breadwallet.tools.util.Utils;
@@ -73,6 +74,7 @@ import com.breadwallet.wallet.abstracts.BaseWalletManager;
 import com.breadwallet.wallet.wallets.bitcoin.BaseBitcoinWalletManager;
 import com.breadwallet.wallet.wallets.ela.ElaDataSource;
 import com.google.gson.Gson;
+import com.platform.sqlite.PlatformSqliteHelper;
 
 import org.wallet.library.Constants;
 
@@ -638,5 +640,16 @@ public class UiUtils {
     public static String getDefaultWalletName(Activity context) {
         int count = BRKeyStore.getPhraseCount(context) + 1;
         return "Wallet #" + count;
+    }
+
+    public static void setStorageName(String phrase) {
+        try {
+            String hash = UiUtils.getStringMd5(phrase);
+            BRSQLiteHelper.DATABASE_NAME = hash + ".db";
+            PlatformSqliteHelper.DATABASE_NAME = hash + "_platform.db";
+            BRSharedPrefs.PREFS_NAME = "profile_" + hash;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 }

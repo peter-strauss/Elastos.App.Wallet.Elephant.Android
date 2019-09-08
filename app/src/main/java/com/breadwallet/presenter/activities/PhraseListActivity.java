@@ -129,7 +129,7 @@ public class PhraseListActivity extends BRActivity implements PhraseAdapter.Wall
                         }
                     }, null, null, 0);
         } else {
-            UiUtils.switchPhrase(PhraseListActivity.this, new String(info.phrase), true, info.alias);
+            UiUtils.switchPhrase(PhraseListActivity.this, new String(info.phrase), true, false, info.alias);
         }
     }
 

@@ -276,6 +276,36 @@
         </activity>
 
         <activity
+            android:name=".presenter.activities.did.HyperGetAddressActivity"
+            android:launchMode="singleTask"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="elaphant"
+                    android:host="hypergetaddress"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".presenter.activities.HyperSendCryptoActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="elaphant"
+                    android:host="hypersendcrypto"/>
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".presenter.activities.did.DidAuthListActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />

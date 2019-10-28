@@ -233,6 +233,12 @@ public class ExploreWebActivity extends BRActivity {
             finish();
         } else if(url.contains("elaphant") && url.contains("eladposvote")) {
             UiUtils.startVoteActivity(ExploreWebActivity.this, url);
+        } else if(url.startsWith("elaphant") && url.contains("hypergetaddress")) {
+            AuthorizeManager.startWalletActivity(ExploreWebActivity.this, url, "com.breadwallet.presenter.activities.did.HyperGetAddressActivity");
+            finish();
+        } else if(url.startsWith("elaphant") && url.contains("hypersendcrypto")) {
+            AuthorizeManager.startWalletActivity(ExploreWebActivity.this, url, "com.breadwallet.presenter.activities.HyperSendCryptoActivity");
+            finish();
         } else {
             webView.loadUrl(url);
         }

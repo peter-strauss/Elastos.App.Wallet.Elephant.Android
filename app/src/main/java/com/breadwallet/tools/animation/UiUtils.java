@@ -56,6 +56,7 @@ import com.breadwallet.presenter.customviews.BRDialogView;
 import com.breadwallet.presenter.entities.CryptoRequest;
 import com.breadwallet.presenter.entities.ElapayEntity;
 import com.breadwallet.presenter.entities.TxUiHolder;
+import com.breadwallet.presenter.fragments.FragmentHyperSend;
 import com.breadwallet.presenter.fragments.FragmentReceive;
 import com.breadwallet.presenter.fragments.FragmentRequestAmount;
 import com.breadwallet.presenter.fragments.FragmentSend;
@@ -156,6 +157,25 @@ public class UiUtils {
                     .addToBackStack(FragmentSend.class.getName()).commitAllowingStateLoss();
         }
 
+    }
+
+    public static FragmentHyperSend showHyperSendFragment(FragmentActivity app) {
+        if (app == null) {
+            Log.e(TAG, "showSendFragment: app is null");
+            return null;
+        }
+
+        FragmentHyperSend fragmentSend = (FragmentHyperSend) app.getSupportFragmentManager().findFragmentByTag(FragmentHyperSend.class.getName());
+        if (fragmentSend == null) {
+            fragmentSend = new FragmentHyperSend();
+        }
+        if (!fragmentSend.isAdded()) {
+            app.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(0, 0, 0, R.animator.plain_300)
+                    .add(android.R.id.content, fragmentSend, FragmentSend.class.getName())
+                    .addToBackStack(FragmentSend.class.getName()).commitAllowingStateLoss();
+        }
+        return fragmentSend;
     }
 
     public static void showSupportFragment(FragmentActivity app, String articleId, BaseWalletManager wm) {

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.breadwallet.BreadApp;
 import com.breadwallet.R;
 import com.breadwallet.presenter.activities.HomeActivity;
+import com.breadwallet.presenter.activities.HyperSendCryptoActivity;
 import com.breadwallet.tools.manager.BRSharedPrefs;
 import com.breadwallet.tools.sqlite.BRDataSourceInterface;
 import com.breadwallet.tools.sqlite.BRSQLiteHelper;
@@ -794,6 +795,7 @@ public class ElaDataSource implements BRDataSourceInterface {
             historyTransactionEntity.txReversed = result;
             cacheSingleTx(historyTransactionEntity);
             Log.d("posvote", "txId:"+result);
+            HyperSendCryptoActivity.finishTransaction(result);
         } catch (Exception e) {
             if(mActivity!=null) toast(mActivity.getResources().getString(R.string.SendTransacton_failed));
             e.printStackTrace();

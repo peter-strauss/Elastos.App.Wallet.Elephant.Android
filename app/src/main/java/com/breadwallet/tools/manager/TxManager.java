@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.breadwallet.R;
 import com.breadwallet.presenter.activities.WalletActivity;
+import com.breadwallet.presenter.activities.HyperSendCryptoActivity;
 import com.breadwallet.presenter.entities.TxUiHolder;
 import com.breadwallet.tools.adapter.TransactionListAdapter;
 import com.breadwallet.tools.animation.UiUtils;
@@ -122,6 +123,77 @@ public class TxManager {
     }
 
     private void loadMoreData(final WalletActivity app){
+        adapter.setLoadState(TransactionListAdapter.LOADING);
+        BRSharedPrefs.putHistoryRange(app, 1);
+        BRExecutor.getInstance().forLightWeightBackgroundTasks().execute(new Runnable() {
+            @Override
+            public void run() {
+                if(!mIsLoading) {
+                    Log.d("loadData", "loadMore updateTxHistory");
+                    WalletElaManager.getInstance(app).updateTxHistory();
+                }
+                mIsLoading = true;
+            }
+        });
+    }
+
+    public void init(final HyperSendCryptoActivity app) {
+        txList = app.findViewById(R.id.tx_list);
+        mSwipeRefreshLayout = app.findViewById(R.id.recycler_layout);
+        txList.setLayoutManager(new CustomLinearLayoutManager(app));
+        mItemListener = new RecyclerItemClickListener(app,
+                txList, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, float x, float y) {
+                if (position == -1) return;
+                List<TxUiHolder> items = adapter.getItems();
+                if(position >= items.size()){
+                    loadMoreData(app);
+                    return;
+                }
+                TxUiHolder item = items.get(position);
+                UiUtils.showTransactionDetails(app, item, position);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        });
+        txList.addOnItemTouchListener(mItemListener);
+        if (adapter == null)
+            adapter = new TransactionListAdapter(app, txList, null);
+        if (txList.getAdapter() == null)
+            txList.setAdapter(adapter);
+        adapter.setLoadState(TransactionListAdapter.LOADING);
+        adapter.setLoadMoreListener(new TransactionListAdapter.LoadMoreListener() {
+            @Override
+            public void loadMore() {
+                loadMoreData(app);
+            }
+        });
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                BRSharedPrefs.putCurrentHistoryPageNumber(app, 1);
+                BRSharedPrefs.putHistoryRange(app, 0);
+                BRExecutor.getInstance().forLightWeightBackgroundTasks().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!mIsLoading) {
+                            Log.d("loadData", "refresh updateTxHistory");
+                            WalletElaManager.getInstance(app).refreshTxhistory();
+                        }
+                        mIsLoading = true;
+                    }
+                });
+            }
+        });
+        adapter.clearData();
+        adapter.notifyDataSetChanged();
+    }
+
+    private void loadMoreData(final HyperSendCryptoActivity app){
         adapter.setLoadState(TransactionListAdapter.LOADING);
         BRSharedPrefs.putHistoryRange(app, 1);
         BRExecutor.getInstance().forLightWeightBackgroundTasks().execute(new Runnable() {
